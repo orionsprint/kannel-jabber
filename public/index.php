@@ -35,13 +35,17 @@ include 'XMPPHP/XMPP.php';
 #If this doesn't work, are you running 64-bit PHP with < 5.2.6?
 $conn = new XMPPHP_XMPP($host, $port, $username, $password, $resource, $server, $printlog=false, $loglevel=XMPPHP_Log::LEVEL_INFO);
 
-$to_jid = $config_ini['debug']['to_jid'];
+$to_jids = $config_ini['debug']['to_jid'];
+
+//var_dump($to_jids);
 
 try {
 	$conn->connect();
 	$conn->processUntil('session_start');
 	$conn->presence();
-	$conn->message($to_jid, $text);
+	foreach($to_jids as $jid){
+		$conn->message($jid, $text);
+	}
 	$conn->disconnect();
 	echo "ok";
 } catch(XMPPHP_Exception $e) {
